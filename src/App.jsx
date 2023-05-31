@@ -2,9 +2,17 @@ import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 
+
+import Header from './Header'
+import ThemeContext, { theme, toggleTheme } from './context/Context'
+
+
+
 function App() {
   const [estadoMoto, setEstadoMoto] = useState('apagada')
   const [contador, setContador] = useState(0)
+
+  const [currentTheme, setCurrentTheme] = useState(theme)
 
   const inputRef = useRef(null);
 
@@ -20,31 +28,47 @@ function App() {
   useEffect(() => {
     console.log('Total: ' + contador)
   }, [contador])
-  
+
+  const toggleThemeHandler = () => {
+    toggleTheme();
+    setCurrentTheme({ ...theme });
+  };
 
 
   return (
-    <div className="App">
-      <div>        
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
 
-      <h1>Moto {estadoMoto}</h1>
-      <h2>Clicks:{contador}</h2>
+    <ThemeContext.Provider value={{ ...currentTheme, toggleTheme: toggleThemeHandler }}>
+  
+      <div className="App">
+        <button onClick={toggleTheme}>Toggle Theme</button>
+        <div>        
+          <a href="https://reactjs.org" target="_blank">
+            <img src={reactLogo} className="logo react" alt="React logo" />
+          </a>
+        </div>
 
-      <div className="card">
-        <button onClick={() => {
-          encenderApagar();
-          focusEnInput();        
-        }}>apagar/encender!</button>
-        
+        <h1>Moto {estadoMoto}</h1>
+        <h2>Clicks:{contador}</h2>
+
+        <div className="card">
+          <button onClick={() => {
+            encenderApagar();
+            focusEnInput();        
+          }}>apagar/encender!</button>
+          
+        </div>
+        <div>
+          <input type="text" ref={inputRef} />
+        </div>
+
+
+          <div>
+            <h1>useContext:</h1>
+          </div>
+
+          <Header></Header>
       </div>
-      <div>
-        <input type="text" ref={inputRef} />
-      </div>
-    </div>
+    </ThemeContext.Provider>
   )
 }
 
